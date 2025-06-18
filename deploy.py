@@ -21,15 +21,6 @@ st.dataframe(df.head())
 st.subheader("Statistik Ringkas")
 st.write(df.describe())
 
-# Pilihan untuk filter
-st.subheader("Filter Berdasarkan Platform")
-platforms = df['Platform'].dropna().unique()
-selected_platform = st.selectbox("Pilih Platform", options=platforms)
-
-filtered_df = df[df['Platform'] == selected_platform]
-st.write(f"Jumlah game pada platform {selected_platform}: {filtered_df.shape[0]}")
-st.dataframe(filtered_df)
-
 # Visualisasi Penjualan berdasarkan Tahun
 st.subheader("Visualisasi Penjualan per Tahun")
 if 'Year' in df.columns and 'Global_Sales' in df.columns:
@@ -45,4 +36,5 @@ else:
 # Footer
 st.markdown("---")
 st.markdown("Dibuat dengan ❤️ menggunakan Streamlit")
+
 
