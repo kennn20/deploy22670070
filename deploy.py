@@ -6,10 +6,14 @@ import seaborn as sns
 # Judul aplikasi
 st.title("Analisis Dataset Game Terlaris")
 
-# Upload atau load dataset
+# Load dataset
 @st.cache_data
 def load_data():
-    return pd.read_csv("bestSelling_games.csv")
+    df = pd.read_csv("bestSelling_games.csv")
+    # Konversi kolom tanggal
+    df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+    df['release_year'] = df['release_date'].dt.year
+    return df
 
 df = load_data()
 
@@ -21,20 +25,21 @@ st.dataframe(df.head())
 st.subheader("Statistik Ringkas")
 st.write(df.describe())
 
-# Visualisasi Penjualan berdasarkan Tahun
-st.subheader("Visualisasi Penjualan per Tahun")
-if 'Year' in df.columns and 'Global_Sales' in df.columns:
-    sales_per_year = df.groupby('Year')['Global_Sales'].sum().reset_index()
+# Visualisasi Estimated Downloads berdasarkan Tahun Rilis
+st.subheader("Visualisasi Unduhan Estimasi per Tahun Rilis")
+if 'release_year' in df.columns and 'estimated_downloads' in df.columns:
+    downloads_per_year = df.groupby('release_year')['estimated_downloads'].sum().reset_index()
+    downloads_per_year = downloads_per_year.dropna()
+
     fig, ax = plt.subplots(figsize=(10, 5))
-    sns.lineplot(data=sales_per_year, x='Year', y='Global_Sales', ax=ax)
-    ax.set_title("Total Penjualan Global per Tahun")
-    ax.set_ylabel("Penjualan (juta unit)")
+    sns.lineplot(data=downloads_per_year, x='release_year', y='estimated_downloads', ax=ax)
+    ax.set_title("Total Unduhan Estimasi per Tahun Rilis")
+    ax.set_ylabel("Estimasi Unduhan")
+    ax.set_xlabel("Tahun Rilis")
     st.pyplot(fig)
 else:
-    st.warning("Kolom 'Year' atau 'Global_Sales' tidak ditemukan di dataset.")
+    st.warning("Kolom 'release_year' atau 'estimated_downloads' tidak ditemukan.")
 
 # Footer
 st.markdown("---")
 st.markdown("Dibuat dengan ❤️ menggunakan Streamlit")
-
-
