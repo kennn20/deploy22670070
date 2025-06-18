@@ -42,4 +42,4 @@ else:
 
 # Footer
 st.markdown("---")
-st.markdown("Dibuat dengan ❤️ menggunakan Streamlit")
+st.markdown("Pangeran Genuk")
